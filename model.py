@@ -3,6 +3,8 @@ from torch import nn
 
 from models import resnet, pre_act_resnet, wide_resnet, resnext, densenet
 
+gpus = '0'
+gpus = [int(i) for i in gpus.split(',')]
 
 def generate_model(opt):
     assert opt.model in [
@@ -163,14 +165,27 @@ def generate_model(opt):
 
     if not opt.no_cuda:
         model = model.cuda()
-        model = nn.DataParallel(model, device_ids=None)
+        model = nn.DataParallel(model, device_ids=gpus)
 
         if opt.pretrain_path:
             print('loading pretrained model {}'.format(opt.pretrain_path))
             pretrain = torch.load(opt.pretrain_path)
             assert opt.arch == pretrain['arch']
 
-            model.load_state_dict(pretrain['state_dict'])
+            # checking if this will work
+            # state_dict = pretrain['state_dict']
+            # from collections import OrderedDict
+            # new_state_dict = OrderedDict()
+            #
+            # for k, v in state_dict.items():
+            #     name = k[7:]  # remove `module.`
+            #     new_state_dict[name] = v
+            #
+            # model.load_state_dict(new_state_dict)
+
+            # this block
+
+            # model.load_state_dict(pretrain['state_dict'])
 
             if opt.model == 'densenet':
                 model.module.classifier = nn.Linear(

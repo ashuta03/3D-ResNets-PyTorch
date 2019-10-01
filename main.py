@@ -22,6 +22,13 @@ from train import train_epoch
 from validation import val_epoch
 import test
 
+"""
+python main.py --root_path /var/www/3D-ResNets-PyTorch --video_path paths/jpg_vdr --annotation_path paths/annotations/hmdb51_1.json \
+--result_path results --dataset hmdb51 --n_classes 400 --n_finetune_classes 51 \
+--pretrain_path paths/resnext-101-kinetics-ucf101_split1.pth --ft_begin_index 4 \
+--model resnext --model_depth 101 --batch_size 128 --n_threads 4 --checkpoint 5
+"""
+
 if __name__ == '__main__':
     opt = parse_opts()
     if opt.root_path != '':
