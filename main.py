@@ -23,7 +23,7 @@ from validation import val_epoch
 import test
 
 """
-python main.py --root_path /var/www/3D-ResNets-PyTorch --video_path paths/jpg_vdr --annotation_path paths/annotations/hmdb51_1.json \
+python main.py --root_path /mnt/disk1/3D-ResNets-PyTorch --video_path paths/jpg_vdr --annotation_path paths/annotations/hmdb51_1.json \
 --result_path results --dataset hmdb51 --n_classes 400 --n_finetune_classes 51 \
 --pretrain_path paths/resnext-101-kinetics-ucf101_split1.pth --ft_begin_index 4 \
 --model resnext --model_depth 101 --batch_size 128 --n_threads 4 --checkpoint 5
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     torch.manual_seed(opt.manual_seed)
 
     model, parameters = generate_model(opt)
-    print(model)
+    # print(model)
     criterion = nn.CrossEntropyLoss()
     if not opt.no_cuda:
         criterion = criterion.cuda()
@@ -128,7 +128,7 @@ if __name__ == '__main__':
             os.path.join(opt.result_path, 'val.log'), ['epoch', 'loss', 'acc'])
 
     if opt.resume_path:
-        print('loading checkpoint {}'.format(opt.resume_path))
+        print('loading checkpoint {}') # .format(opt.resume_path))
         checkpoint = torch.load(opt.resume_path)
         assert opt.arch == checkpoint['arch']
 

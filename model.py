@@ -3,8 +3,15 @@ from torch import nn
 
 from models import resnet, pre_act_resnet, wide_resnet, resnext, densenet
 
-gpus = '0'
-gpus = [int(i) for i in gpus.split(',')]
+gpus = "0,1"
+
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    gpus = [int(i) for i in gpus.split(',')]
+    print("=> active GPUs: {}".format(gpus))
+
+else:
+    device = torch.device("cpu")
 
 def generate_model(opt):
     assert opt.model in [
@@ -165,10 +172,10 @@ def generate_model(opt):
 
     if not opt.no_cuda:
         model = model.cuda()
-        model = nn.DataParallel(model, device_ids=gpus)
+        model = nn.DataParallel(model, device_ids=gpus).to(device)
 
         if opt.pretrain_path:
-            print('loading pretrained model {}'.format(opt.pretrain_path))
+            print('loading pretrained model {}') # .format(opt.pretrain_path))
             pretrain = torch.load(opt.pretrain_path)
             assert opt.arch == pretrain['arch']
 
@@ -200,7 +207,7 @@ def generate_model(opt):
             return model, parameters
     else:
         if opt.pretrain_path:
-            print('loading pretrained model {}'.format(opt.pretrain_path))
+            print('loading pretrained model {}') # .format(opt.pretrain_path))
             pretrain = torch.load(opt.pretrain_path)
             assert opt.arch == pretrain['arch']
 
